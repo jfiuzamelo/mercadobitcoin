@@ -33,7 +33,7 @@
 		8BA487772D64BE220054C8A2 /* Exceptions for "mercadobitcoin" folder in "mercadobitcoin" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				App/Info.plist,
 			);
 			target = 8BA4874E2D64BE200054C8A2 /* mercadobitcoin */;
 		};
