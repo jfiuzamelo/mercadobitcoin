@@ -2,9 +2,8 @@ import Foundation
 
 protocol ExchangeListService {
     
-    func getExchanges(with exchangeId: String,
-                           then handler: @escaping (Result<[Exchange], NetworkError>) -> Void)
-    
+    func getExchanges(then handler: @escaping (Result<[Exchange], NetworkError>) -> Void)
+    func getLogo(then handler: @escaping (Result<[ExchangeLogo], NetworkError>) -> Void)
 }
 
 final class MBExchangeListService: ExchangeListService {
@@ -15,7 +14,11 @@ final class MBExchangeListService: ExchangeListService {
         self.dataRepository = dataRepository
     }
     
-    func getExchanges(with exchangeId: String, then handler: @escaping (Result<[Exchange], NetworkError>) -> Void) {
-        dataRepository.getExchanges(with: exchangeId, then: handler)
+    func getExchanges(then handler: @escaping (Result<[Exchange], NetworkError>) -> Void) {
+        dataRepository.getExchanges(then: handler)
+    }
+    
+    func getLogo(then handler: @escaping (Result<[ExchangeLogo], NetworkError>) -> Void) {
+        dataRepository.getExchangesLogo(then: handler)
     }
 }

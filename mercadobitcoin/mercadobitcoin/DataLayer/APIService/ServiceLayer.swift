@@ -24,10 +24,9 @@ class ServiceLayer {
     ///     - method: Define the HTTP Method of URLRequest.
     ///     - handler: Handler the dataTask completion based on an encode instance of U and a case of NetworkError
     func requestDataTask<U: Codable>(endpoint: Endpoint,
-                                          method: HTTPMethod,
-                                          shouldAddToken: Bool = true,
-                                          timeout: TimeInterval = 10,
-                                          then handler: @escaping (Result<U, NetworkError>) -> Void) {
+                                     method: HTTPMethod,
+                                     timeout: TimeInterval = 10,
+                                     then handler: @escaping (Result<U, NetworkError>) -> Void) {
         // Unwrap an URL from URLComponents
         guard let url = endpoint.url else {
             return handler(.failure(NetworkError.invalidURL))
@@ -52,11 +51,11 @@ class ServiceLayer {
         self.urlSessionDataTask(request, handler)
     }
 }
-
-
+    
 extension ServiceLayer {
+    
     private func urlSessionDataTask<U: Codable>(_ request: URLRequest,
-                                                     _ handler: @escaping (Result<U, NetworkError>) -> Void) {
+                                                _ handler: @escaping (Result<U, NetworkError>) -> Void) {
         
         let defaultSession = URLSession(configuration: .default)
         
@@ -126,7 +125,6 @@ extension ServiceLayer {
                         print("------------ Response Body decoded from JSON  ------------")
                         print(responseObject)
                         print("----------------------------------------------------------")
-                        
                         
                         handler(.failure(NetworkError.error))
                         

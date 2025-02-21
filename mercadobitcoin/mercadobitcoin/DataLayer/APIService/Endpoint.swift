@@ -18,8 +18,18 @@ extension Endpoint {
 }
 
 extension Endpoint {
-    static func exchanges(_ exchangeId: String) -> Endpoint {
+    
+    static func exchanges() -> Endpoint {
+        return Endpoint(path: "exchanges")
+    }
+    
+    static func exchangeById(_ exchangeId: String) -> Endpoint {
         let queryItem = URLQueryItem(name: "exchange_id", value: "\(exchangeId)")
         return Endpoint(path: "exchanges", queryItems: [queryItem])
     }
+
+    static func exchangesLogo() -> Endpoint {
+        return Endpoint(path: "exchanges/icons/40")
+    }
+    
 }

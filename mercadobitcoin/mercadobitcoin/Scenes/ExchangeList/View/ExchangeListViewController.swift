@@ -1,7 +1,7 @@
 import UIKit
 import Combine
 
-class ExchangeListViewController: UIViewController {
+class ExchangeListViewController: UIViewController, LeftDetailTableViewCellDelegate {
     
     // MARK: - Private Properties
     private var cancellables = Set<AnyCancellable>()
@@ -10,7 +10,7 @@ class ExchangeListViewController: UIViewController {
         let view = ExchangeListView()
         return view
     }()
-        
+    
     let viewModel = ExchangeListViewModel()
     
     override func loadView() {
@@ -29,15 +29,13 @@ class ExchangeListViewController: UIViewController {
         super.viewDidAppear(animated)
         getExchanges()
     }
-
+    
 }
 
 extension ExchangeListViewController {
     
-    // MARK: getCarsFromAPI
-
     private func getExchanges() {
-
+        
         viewModel.getExchanges().sink { completion in
             switch completion {
             case .finished:
@@ -46,8 +44,21 @@ extension ExchangeListViewController {
                 print(error)
             }
         } receiveValue: { result in
-            // Needed .now() + 0.3 to avoid loading view animation stuck
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, qos: .userInteractive, flags: .assignCurrentContext) {
+            self.getLogo()
+        }.store(in: &cancellables)
+    }
+    
+    private func getLogo() {
+        
+        viewModel.getLogos().sink { completion in
+            switch completion {
+            case .finished:
+                break
+            case .failure(let error):
+                print(error)
+            }
+        } receiveValue: { result in
+            DispatchQueue.main.async(qos: .userInteractive, flags: .assignCurrentContext) {
                 self.exchangeListView.tableView.reloadData()
             }
         }.store(in: &cancellables)
@@ -57,13 +68,24 @@ extension ExchangeListViewController {
 
 extension ExchangeListViewController:  UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return viewModel.numberOfRows
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        return cell
+        return viewModel.generateCell(tableView: tableView, indexPath: indexPath, leftDetailTableViewCellDelegate: self)
     }
 }
 
-extension ExchangeListViewController:  UITableViewDelegate { }
+extension ExchangeListViewController:  UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
+    }
+    
+}
+
+extension ExchangeListViewController {
+    func leftDetailCellSelected(index: IndexPath?) {
+        
+    }
+}
